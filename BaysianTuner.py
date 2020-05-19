@@ -24,11 +24,11 @@ def target_function(batch_size_continuous, lr_exp, momentum,
 
 
 pbounds = {
-    'batch_size_continuous': (4, 4000),
-    'lr_exp': (-2, 2),
-    'momentum': (0.8, 0.999),
-    'layer_size_continuous': (1, 5),
-    'layer_count_continuous': (1, 3)
+    'batch_size_continuous': (3000, 4000),
+    'lr_exp': (-0.5, 0.5),
+    'momentum': (0.85, 0.99),
+    'layer_size_continuous': (2, 5),
+    'layer_count_continuous': (1.5, 2.5)
 }
 
 optimizer = BayesianOptimization(
