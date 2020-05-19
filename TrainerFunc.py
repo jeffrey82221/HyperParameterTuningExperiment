@@ -3,10 +3,10 @@ from numba import cuda
 import tensorflow as tf
 from XORNet import xor_net
 from XORUtil import get_xor_generator, get_xor_data
-from XORStopper import GoalReachedStopper
+from XORStopper import GoalReachedStopper, RandomAccuracyStopper
 '''
 from TrainerFunc import trainer_function
-trainer_function(40, -2, 0.95, 10, 2)
+val_acc, epochs = trainer_function(40, -1, 0.95, 10, 2)
 '''
 
 
@@ -24,10 +24,12 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   model = xor_net(layer_size, layer_count, verbose=False)
   loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
   model.compile(loss=loss, optimizer=op, metrics=['acc'])
-  stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
-                                                patience=100,
+  stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+                                                patience=10,
                                                 verbose=1)
-  stop_as_goal_reached = GoalReachedStopper()
+  stop_if_goal_reached = GoalReachedStopper()
+  stop_if_no_improve = RandomAccuracyStopper(patience=100)
+
   validation_size = 4
   xor_data_generator = get_xor_generator(batch_size)
   xor_validation_data = get_xor_data(validation_size)
@@ -37,7 +39,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
       epochs=1000000,
       validation_data=xor_validation_data,
       verbose=2,
-      callbacks=[stop_early, stop_as_goal_reached],
+      callbacks=[stop_early, stop_if_goal_reached, stop_if_no_improve],
       # use_multiprocessing=True,
       # workers=2,
       # max_queue_size=100
@@ -51,4 +53,4 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   tf.keras.backend.clear_session()
   cuda.select_device(0)
   cuda.close()
-  return final_val_acc
+  return final_val_acc, len(history.history['val_acc'])
