@@ -5,13 +5,13 @@ from XORNet import xor_net
 from XORUtil import get_xor_generator, get_xor_data
 from XORStopper import GoalReachedStopper, RandomAccuracyStopper
 '''
-from TrainerFunc import trainer_function
-val_acc, epochs = trainer_function(40, -1, 0.95, 10, 2)
+from XORTrainerFunc import xor_trainer_function
+val_acc, epochs = xor_trainer_function(40, -1, 0.95, 10, 2)
 '''
 
 
-def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
-                     layer_count_continuous):
+def xor_trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
+                         layer_count_continuous):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp  # float(sys.argv[3])
