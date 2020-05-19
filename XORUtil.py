@@ -40,7 +40,7 @@ class get_xor_generator(Sequence):
         zero_one_instances
     ])
     target = np.logical_xor(instances[:, 0], instances[:, 1])
-    return instances, target.astype(float)
+    return instances - 0.5, target.astype(float)
 
 
 def get_xor_data(data_size):

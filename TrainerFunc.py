@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 '''
 from TrainerFunc import trainer_function
-trainer_function(400, -4, 0.9, 4, 1)
+trainer_function(40, -4, 0.95, 10, 2)
 '''
 
 
@@ -30,7 +30,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
                                                 patience=5,
                                                 verbose=1)
-  validation_size = 1000
+  validation_size = 10000
   xor_data_generator = get_xor_generator(batch_size)
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
