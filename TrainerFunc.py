@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 '''
 from TrainerFunc import trainer_function
-trainer_function(40, -5, 0.95, 10, 2)
+trainer_function(400, -5, 0.95, 10, 2)
 '''
 
 
@@ -35,14 +35,14 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
       xor_data_generator,
-      steps_per_epoch=100,  # this is a virtual parameter
+      steps_per_epoch=100000,  # this is a virtual parameter
       epochs=1000000,
       validation_data=xor_validation_data,
       verbose=1,
       callbacks=[stop_early],
-      #use_multiprocessing=True,
-      #workers=2,
-      #max_queue_size=100
+      # use_multiprocessing=True,
+      # workers=2,
+      # max_queue_size=100
   )
   # make sure the input of each pixel is between 0 and 1
   # get final val acc
