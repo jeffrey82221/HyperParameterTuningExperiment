@@ -42,4 +42,4 @@ class get_xor_generator(Sequence):
         zero_one_instances
     ])
     target = np.logical_xor(instances[:, 0], instances[:, 1])
-    yield instances, target
+    return instances, target.astype(float)
