@@ -6,6 +6,8 @@ import numpy as np
 from XOR_Util import get_xor_generator
 gen = get_xor_generator(8)
 next(gen)
+from XOR_Util import get_xor_data
+get_xor_data(16)
 '''
 
 
