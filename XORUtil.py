@@ -3,10 +3,10 @@ import numpy as np
 from tensorflow.python.keras.utils.data_utils import Sequence
 import numpy as np
 '''
-from XOR_Util import get_xor_generator
+from XORUtil import get_xor_generator
 gen = get_xor_generator(8)
 next(gen)
-from XOR_Util import get_xor_data
+from XORUtil import get_xor_data
 get_xor_data(16)
 '''
 
@@ -44,5 +44,8 @@ class get_xor_generator(Sequence):
 
 
 def get_xor_data(data_size):
+  assert data_size % 4 == 0
+  # make sure the number of the following instances are the same:
+  # (0,0), (0,1), (1,0), (1,1).
   gen = get_xor_generator(data_size)
   return next(gen)
