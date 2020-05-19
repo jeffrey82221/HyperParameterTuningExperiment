@@ -40,7 +40,10 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
       validation_data=xor_validation_data,
       verbose=2,
       callbacks=[stop_early],
-      multiprocessing=True)
+      use_multiprocessing=True,
+      workers=2,
+      max_queue_size=100
+  )
   # make sure the input of each pixel is between 0 and 1
   # get final val acc
   final_val_acc = history.history['val_acc'][-1]
