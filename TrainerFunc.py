@@ -6,7 +6,7 @@ from XORUtil import get_xor_generator, get_xor_data
 
 '''
 from TrainerFunc import trainer_function
-trainer_function(40, -5, 0.95, 10, 2)
+trainer_function(40, -1, 0.95, 10, 2)
 '''
 
 
@@ -25,14 +25,14 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
   model.compile(loss=loss, optimizer=op, metrics=['acc'])
   stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
-                                                patience=50,
+                                                patience=100,
                                                 verbose=1)
-  validation_size = 10000
+  validation_size = 4
   xor_data_generator = get_xor_generator(batch_size)
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
       xor_data_generator,
-      steps_per_epoch=100,  # this is a virtual parameter
+      steps_per_epoch=1,  # this is a virtual parameter
       epochs=1000000,
       validation_data=xor_validation_data,
       verbose=2,
