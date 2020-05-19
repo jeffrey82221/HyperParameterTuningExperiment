@@ -1,4 +1,5 @@
 from tensorflow.keras.callbacks import Callback
+import time
 '''
 from XORUtil import get_xor_generator
 gen = get_xor_generator(8)
@@ -31,7 +32,7 @@ class RandomAccuracyStopper(Callback):
             str(self.patience) + " times")
 
 
-class OneSecondStopper(tf.keras.callbacks.Callback):
+class OneSecondStopper(Callback):
   def on_train_begin(self, logs={}):
     self.times = []
 
