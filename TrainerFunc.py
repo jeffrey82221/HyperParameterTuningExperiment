@@ -3,10 +3,10 @@ from numba import cuda
 import tensorflow as tf
 from XORNet import xor_net
 from XORUtil import get_xor_generator, get_xor_data
-
+from XORStopper import GoalReachedStopper
 '''
 from TrainerFunc import trainer_function
-trainer_function(40, -1, 0.95, 10, 2)
+trainer_function(40, -2, 0.95, 10, 2)
 '''
 
 
@@ -27,6 +27,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
                                                 patience=100,
                                                 verbose=1)
+  stop_as_goal_reached = GoalReachedStopper()
   validation_size = 4
   xor_data_generator = get_xor_generator(batch_size)
   xor_validation_data = get_xor_data(validation_size)
@@ -36,7 +37,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
       epochs=1000000,
       validation_data=xor_validation_data,
       verbose=2,
-      callbacks=[stop_early],
+      callbacks=[stop_early, stop_as_goal_reached],
       # use_multiprocessing=True,
       # workers=2,
       # max_queue_size=100
