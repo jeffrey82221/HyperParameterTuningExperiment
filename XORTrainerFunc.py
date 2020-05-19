@@ -75,10 +75,10 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   validation_size = 4
   xor_data_generator = get_xor_generator(batch_size)
   xor_validation_data = get_xor_data(validation_size)
-  model.fit_generator(
+  history = model.fit_generator(
       xor_data_generator,
       steps_per_epoch=1,
-      epochs=1000,
+      epochs=100,
       validation_data=xor_validation_data,
       verbose=2,
       callbacks=[stop_if_goal_reached, time_callback])
@@ -86,7 +86,10 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   del model
   gc.collect()
   tf.keras.backend.clear_session()
-  return 1. / computation_time
+  if history.history['val_acc'][-1] < 1.0:
+    return 0.
+  else:
+    return 1. / computation_time
 
 
 def initial_slop(batch_size_continuous, lr_exp, momentum,

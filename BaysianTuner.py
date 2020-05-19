@@ -35,7 +35,7 @@ optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
 # run the optimization
 optimizer.maximize(
-    n_iter=1000,  # also determine by the boundary of each parameter
+    n_iter=10000,  # also determine by the boundary of each parameter
     init_points=2**3,  # determine according to the boundary of each parameter
 )
 # access history and result
