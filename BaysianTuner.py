@@ -2,7 +2,7 @@ from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 from bayes_opt.util import load_logs
-from XORTrainerFunc import initial_acc  # initial_slop
+from XORTrainerFunc import perfect_acc_time  # initial_acc  # initial_slop
 '''
 pbounds = {
     'batch_size_continuous': (4, 4000),
@@ -20,7 +20,7 @@ pbounds = {
     'layer_count_continuous': (1, 1)
 }
 optimizer = BayesianOptimization(
-    f=initial_acc,
+    f=perfect_acc_time,
     pbounds=pbounds,
     random_state=1,
 )
