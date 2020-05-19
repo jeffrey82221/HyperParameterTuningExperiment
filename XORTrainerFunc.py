@@ -51,7 +51,7 @@ def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
       xor_data_generator,
-      steps_per_epoch=1,  # this is a virtual parameter
+      steps_per_epoch=100,  # this is a virtual parameter
       epochs=10,
       validation_data=xor_validation_data,
       verbose=2,
