@@ -23,7 +23,7 @@ def target_function(batch_size_continuous, lr_exp, momentum,
   return slop
 '''
 pbounds = {
-    'batch_size_continuous': (3000, 4000),
+    'batch_size_continuous': (4, 4000),
     'lr_exp': (-0.5, 0.5),
     'momentum': (0.85, 0.99),
     'layer_size_continuous': (2, 5),

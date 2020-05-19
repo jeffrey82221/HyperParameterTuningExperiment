@@ -7,8 +7,8 @@ from XORStopper import GoalReachedStopper, RandomAccuracyStopper
 import time
 import numpy as np
 '''
-from XORTrainerFunc import xor_trainer_function
-val_acc, training_time = xor_trainer_function(40, -1, 0.95, 10, 2)
+from XORTrainerFunc import initial_slop
+val_acc, training_time = initial_slop(40, -1, 0.95, 10, 2)
 '''
 
 
@@ -54,7 +54,7 @@ def initial_slop(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
       steps_per_epoch=1,  # this is a virtual parameter
       epochs=10,
       validation_data=xor_validation_data,
-      verbose=0,
+      verbose=2,
       callbacks=[time_callback]  # [stop_early, stop_if_goal_reached, stop_if_no_improve, time_callback],
       # use_multiprocessing=True,
       # workers=2,
@@ -70,6 +70,6 @@ def initial_slop(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
   del model
   gc.collect()
   tf.keras.backend.clear_session()
-  cuda.select_device(0)
-  cuda.close()
+  # cuda.select_device(0)
+  # cuda.close()
   return slop  # final_val_acc, len(history.history['val_acc']) * epoch_computation_time
