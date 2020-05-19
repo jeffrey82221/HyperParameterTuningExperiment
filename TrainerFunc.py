@@ -35,7 +35,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
       xor_data_generator,
-      steps_per_epoch=100000,  # this is a virtual parameter
+      steps_per_epoch=10000,  # this is a virtual parameter
       epochs=1000000,
       validation_data=xor_validation_data,
       verbose=1,
