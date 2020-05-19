@@ -1,6 +1,5 @@
-from XORTrainerFunc import initial_slop
+from XORTrainerFunc import initial_acc  # initial_slop
 from bayes_opt import BayesianOptimization
-from bayes_opt.logger import JSONLogger
 from bayes_opt.util import load_logs
 
 '''
@@ -23,14 +22,14 @@ for v in list(map(lambda x:x['params']['layer_count_continuous'],data)):
 
 def get():
     pbounds = {
-        'batch_size_continuous': (4, 4000),
-        'lr_exp': (-2, 2),
-        'momentum': (0.8, 0.999),
-        'layer_size_continuous': (1, 5),
-        'layer_count_continuous': (1, 3)
+        'batch_size_continuous': (1500, 2000),
+        'lr_exp': (0.5, 1.5),
+        'momentum': (0.9, 0.99),
+        'layer_size_continuous': (5, 10),
+        'layer_count_continuous': (1, 1)
     }
     optimizer = BayesianOptimization(
-        f=initial_slop,
+        f=initial_acc,  # initial_slop,
         pbounds=pbounds
     )
     load_logs(optimizer, logs=["./baysian_logs.json"])
