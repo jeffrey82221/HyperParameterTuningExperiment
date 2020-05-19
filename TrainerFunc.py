@@ -27,7 +27,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   model = xor_net(layer_size, layer_count, verbose=False)
   loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
   model.compile(loss=loss, optimizer=op, metrics=['acc'])
-  stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
+  stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                 patience=5,
                                                 verbose=1)
   validation_size = 10000
@@ -35,10 +35,10 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
   xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(
       xor_data_generator,
-      steps_per_epoch=10000,  # this is a virtual parameter
+      steps_per_epoch=10,  # this is a virtual parameter
       epochs=1000000,
       validation_data=xor_validation_data,
-      verbose=1,
+      verbose=2,
       callbacks=[stop_early],
       # use_multiprocessing=True,
       # workers=2,
