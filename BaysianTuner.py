@@ -11,7 +11,7 @@ def target_function(batch_size_continuous, lr_exp, momentum,
                                                 momentum, layer_size_continuous,
                                                 layer_count_continuous)
   print("val_acc:", val_acc, "training time:", training_time)
-  return val_acc - training_time
+  return val_acc * 30 - training_time
 
 
 pbounds = {
@@ -38,8 +38,8 @@ optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
 # run the optimization
 optimizer.maximize(
-    init_points=300,  # determine according to the boundary of each parameter
-    n_iter=8,  # also determine by the boundary of each parameter
+    n_iter=1000,  # also determine by the boundary of each parameter
+    init_points=2**5,  # determine according to the boundary of each parameter
 )
 # access history and result
 
