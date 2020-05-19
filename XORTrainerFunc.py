@@ -86,7 +86,7 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   del model
   gc.collect()
   tf.keras.backend.clear_session()
-  return -computation_time
+  return 1. / computation_time
 
 
 def initial_slop(batch_size_continuous, lr_exp, momentum,
