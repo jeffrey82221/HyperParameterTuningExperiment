@@ -38,7 +38,7 @@ def trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continu
       steps_per_epoch=100,  # this is a virtual parameter
       epochs=1000000,
       validation_data=xor_validation_data,
-      verbose=2,
+      verbose=1,
       callbacks=[stop_early],
       use_multiprocessing=True,
       workers=2,
