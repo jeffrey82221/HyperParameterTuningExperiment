@@ -23,8 +23,8 @@ class TimeHistory(tf.keras.callbacks.Callback):
     self.times.append(time.time() - self.epoch_time_start)
 
 
-def xor_trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
-                         layer_count_continuous):
+def initial_slop(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
+                 layer_count_continuous):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp  # float(sys.argv[3])
@@ -37,12 +37,13 @@ def xor_trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_con
   model = xor_net(layer_size, layer_count, verbose=False)
   loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
   model.compile(loss=loss, optimizer=op, metrics=['acc'])
-
+  '''
   stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_acc',
-                                                patience=1000,
+                                                patience=10,
                                                 verbose=1)
   stop_if_goal_reached = GoalReachedStopper()
-  stop_if_no_improve = RandomAccuracyStopper(patience=100)
+  stop_if_no_improve = RandomAccuracyStopper(patience=10)
+  '''
   time_callback = TimeHistory()
 
   validation_size = 4
@@ -51,10 +52,10 @@ def xor_trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_con
   history = model.fit_generator(
       xor_data_generator,
       steps_per_epoch=1,  # this is a virtual parameter
-      epochs=1000000,
+      epochs=10,
       validation_data=xor_validation_data,
       verbose=0,
-      callbacks=[stop_early, stop_if_goal_reached, stop_if_no_improve, time_callback],
+      callbacks=[time_callback]  # [stop_early, stop_if_goal_reached, stop_if_no_improve, time_callback],
       # use_multiprocessing=True,
       # workers=2,
       # max_queue_size=100
@@ -63,11 +64,12 @@ def xor_trainer_function(batch_size_continuous, lr_exp, momentum, layer_size_con
 
   # make sure the input of each pixel is between 0 and 1
   # get final val acc
-  final_val_acc = history.history['val_acc'][-1]
-  #print("ANS:", scale, small_filter_rate, final_val_acc, model.count_params())
+  # final_val_acc = history.history['val_acc'][-1]
+  # print("ANS:", scale, small_filter_rate, final_val_acc, model.count_params())
+  slop = (history.history['val_loss'][0] - history.history['val_loss'][-1]) / epoch_computation_time
   del model
   gc.collect()
   tf.keras.backend.clear_session()
   cuda.select_device(0)
   cuda.close()
-  return final_val_acc, len(history.history['val_acc']) * epoch_computation_time
+  return slop  # final_val_acc, len(history.history['val_acc']) * epoch_computation_time

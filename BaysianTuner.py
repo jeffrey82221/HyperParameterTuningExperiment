@@ -2,27 +2,26 @@ from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 from bayes_opt.util import load_logs
-from XORTrainerFunc import xor_trainer_function
-
+from XORTrainerFunc import initial_slop
+'''
 min_target = 0
 
 
 def target_function(batch_size_continuous, lr_exp, momentum,
                     layer_size_continuous, layer_count_continuous):
   global min_target
-  val_acc, training_time = xor_trainer_function(batch_size_continuous, lr_exp,
-                                                momentum, layer_size_continuous,
-                                                layer_count_continuous)
+  slop = initial_slop(batch_size_continuous, lr_exp,
+                      momentum, layer_size_continuous,
+                      layer_count_continuous)
 
-  target = val_acc * 30 - training_time
-  if val_acc == 0.5:
-    target = min_target
-  if target < min_target:
-    min_target = target
-  print("val_acc:", val_acc, "training time:", training_time, 'target:', target)
-  return target
-
-
+  #target = val_acc * 30 - training_time
+  # if val_acc == 0.5:
+  #  target = min_target
+  # if target < min_target:
+  #  min_target = target
+  #print("val_acc:", val_acc, "training time:", training_time, 'target:', target)
+  return slop
+'''
 pbounds = {
     'batch_size_continuous': (3000, 4000),
     'lr_exp': (-0.5, 0.5),
@@ -32,7 +31,7 @@ pbounds = {
 }
 
 optimizer = BayesianOptimization(
-    f=target_function,
+    f=initial_slop,
     pbounds=pbounds,
     random_state=1,
 )
