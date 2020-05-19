@@ -21,7 +21,7 @@ class get_xor_generator(Sequence):
 
   @property
   def shape(self):
-    return (2,)
+    return (2, )
 
   def __getitem__(self, item):
     return self.__next__()
@@ -29,17 +29,18 @@ class get_xor_generator(Sequence):
   def __next__(self):
     zero_zero_instances = np.zeros((int(self.batch_size / 4), 2))
     one_one_instances = np.ones((int(self.batch_size / 4), 2))
-    one_zero_instances = np.vstack([
-        zero_zero_instances[:, 0],
-        one_one_instances[:, 0]]).T
-    zero_one_instances = np.vstack([
-        one_one_instances[:, 0],
-        zero_zero_instances[:, 0]]).T
+    one_zero_instances = np.vstack(
+        [zero_zero_instances[:, 0], one_one_instances[:, 0]]).T
+    zero_one_instances = np.vstack(
+        [one_one_instances[:, 0], zero_zero_instances[:, 0]]).T
     instances = np.vstack([
-        zero_zero_instances,
-        one_one_instances,
-        one_zero_instances,
+        zero_zero_instances, one_one_instances, one_zero_instances,
         zero_one_instances
     ])
     target = np.logical_xor(instances[:, 0], instances[:, 1])
     return instances, target.astype(float)
+
+
+def get_xor_data(data_size):
+  gen = get_xor_generator(data_size)
+  return next(gen)

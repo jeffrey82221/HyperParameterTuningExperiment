@@ -4,6 +4,7 @@ from numba import cuda
 import pickle
 import tensorflow as tf
 from XORNet import xor_net
+from XORUtil import get_xor_generator, get_xor_data
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -30,7 +31,7 @@ def TrainerFunction(batch_size, lr_exp, momentum, layer_size, layer_count):
                                                 verbose=1)
   validation_size = 1000
   xor_data_generator = get_xor_generator(batch_size)
-  xor_validation_data = get_xor_valid_data(validation_size)
+  xor_validation_data = get_xor_data(validation_size)
   history = model.fit_generator(xor_data_generator,
                                 steps_per_epoch=100,  # this is a virtual parameter
                                 epochs=10000,
