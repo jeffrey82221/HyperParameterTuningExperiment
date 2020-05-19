@@ -10,6 +10,7 @@ def target_function(batch_size_continuous, lr_exp, momentum,
   val_acc, training_time = xor_trainer_function(batch_size_continuous, lr_exp,
                                                 momentum, layer_size_continuous,
                                                 layer_count_continuous)
+  print("val_acc:", val_acc, "training time:", training_time)
   return val_acc - training_time
 
 

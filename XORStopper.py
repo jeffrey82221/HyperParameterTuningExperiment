@@ -27,4 +27,5 @@ class RandomAccuracyStopper(Callback):
       self.count = 0
     if self.count >= self.patience:
       self.model.stop_training = True
-      print("Training Stop because Acc == 0.5 for" + str(self.patience) + "times")
+      print("Training Stop because Acc == 0.5 for " +
+            str(self.patience) + " times")
