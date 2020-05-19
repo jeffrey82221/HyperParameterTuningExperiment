@@ -5,8 +5,11 @@ from bayes_opt.util import load_logs
 from XORTrainerFunc import xor_trainer_function
 
 
-def target_function(*input):
-  val_acc, epochs = xor_trainer_function(*input)
+def target_function(batch_size_continuous, lr_exp, momentum,
+                    layer_size_continuous, layer_count_continuous):
+  val_acc, epochs = xor_trainer_function(batch_size_continuous, lr_exp,
+                                         momentum, layer_size_continuous,
+                                         layer_count_continuous)
   return val_acc - epochs
 
 
@@ -35,7 +38,7 @@ optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 # run the optimization
 optimizer.maximize(
     init_points=300,  # determine according to the boundary of each parameter
-    n_iter=8,      # also determine by the boundary of each parameter
+    n_iter=8,  # also determine by the boundary of each parameter
 )
 # access history and result
 
