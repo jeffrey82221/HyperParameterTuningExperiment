@@ -7,10 +7,10 @@ from XORTrainerFunc import xor_trainer_function
 
 def target_function(batch_size_continuous, lr_exp, momentum,
                     layer_size_continuous, layer_count_continuous):
-  val_acc, epochs = xor_trainer_function(batch_size_continuous, lr_exp,
-                                         momentum, layer_size_continuous,
-                                         layer_count_continuous)
-  return val_acc - epochs
+  val_acc, training_time = xor_trainer_function(batch_size_continuous, lr_exp,
+                                                momentum, layer_size_continuous,
+                                                layer_count_continuous)
+  return val_acc - training_time
 
 
 pbounds = {
