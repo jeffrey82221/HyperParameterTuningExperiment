@@ -30,14 +30,14 @@ def target_function(batch_size_continuous, lr_exp, momentum,
 
 
 pbounds = {
-    'batch_size_continuous': (100, 680),
+    'batch_size_continuous': (4, 120),
     # Possibly as small as possible to reduce model construction time.
     # Effect of large batch size is the same as large lr because
     # the training batch is repeative (no variance between batches).
-    'lr_exp': (1.2, 1.2),
+    'lr_exp': (1.0, 1.5),
     # As large as possible to allows larger initial gradient
-    'momentum': (0.85, 0.85),
-    'layer_size_continuous': (3, 100),
+    'momentum': (0.85, 0.99),
+    'layer_size_continuous': (3, 75),
     # As large as possible to increase model complexity, since no overfitting is presented.)
     'layer_count_continuous': (1, 1)
     # As small as possible because large layer count leads to slower optimization.
