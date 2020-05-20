@@ -191,7 +191,7 @@ def memory_efficiency(batch_size_continuous, lr_exp, momentum,
   del model
   gc.collect()
   tf.keras.backend.clear_session()
-  if final_acc < 1.0 or epoch_usage > 4:
+  if final_acc < 1.0 or epoch_usage > 3:
     # The scenario we want to avoid:
     # val_acc < 1.0 or training epoch size > 3
     return 0.
