@@ -23,6 +23,36 @@ class TimeHistory(tf.keras.callbacks.Callback):
     self.times.append(time.time() - self.epoch_time_start)
 
 
+def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
+                           layer_count_continuous):
+  construct_start_time = time.time()
+  batch_size = int(batch_size_continuous / 4) * 4
+  lr = 10**lr_exp
+  momentum = momentum
+  layer_size = int(layer_size_continuous)
+  layer_count = int(layer_count_continuous)
+
+  op = tf.keras.optimizers.SGD(lr=lr, momentum=momentum, nesterov=True)
+  model = xor_net(layer_size, layer_count, verbose=False)
+  loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+  model.compile(loss=loss, optimizer=op, metrics=['acc'])
+
+  validation_size = 4
+  xor_data_generator = get_xor_generator(batch_size)
+  xor_validation_data = get_xor_data(validation_size)
+  model.fit_generator(
+      xor_data_generator,
+      steps_per_epoch=1,  # this is a virtual parameter
+      epochs=1,
+      validation_data=xor_validation_data,
+      verbose=2)
+  del model
+  gc.collect()
+  tf.keras.backend.clear_session()
+  construction_time = time.time() - construct_start_time
+  return 1. / construction_time
+
+
 def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
                 layer_count_continuous):
   # parameter initialize
