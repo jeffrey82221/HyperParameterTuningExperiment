@@ -16,7 +16,13 @@ class TimeHistory(tf.keras.callbacks.Callback):
 
 
 '''
+from XORNet import xor_net
+model = xor_net(100, 1, verbose=False)
+from Util import get_model_memory_usage
 get_model_memory_usage(4, model)
+from tensorflow.keras import backend as K
+import numpy as np
+trainable_count = np.sum([K.count_params(p) for p in model.trainable_weights])
 
 '''
 
@@ -41,8 +47,8 @@ def get_model_memory_usage(batch_size, model):
         single_layer_mem *= s
     shapes_mem_count += single_layer_mem
 
-  trainable_count = np.sum([K.count_params(p) for p in set(model.trainable_weights)])
-  non_trainable_count = np.sum([K.count_params(p) for p in set(model.non_trainable_weights)])
+  trainable_count = np.sum([K.count_params(p) for p in model.trainable_weights])
+  non_trainable_count = np.sum([K.count_params(p) for p in model.non_trainable_weights])
 
   number_size = 4.0
   if K.floatx() == 'float16':
