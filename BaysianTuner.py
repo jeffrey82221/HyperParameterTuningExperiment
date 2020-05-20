@@ -2,7 +2,7 @@ from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 from bayes_opt.util import load_logs
-from XORTrainerFunc import perfect_acc_time  # model_contruction_time  # perfect_acc_time  # initial_acc  # initial_slop
+from XORTrainerFunc import memory_efficiency  # perfect_acc_time  # model_contruction_time  # perfect_acc_time  # initial_acc  # initial_slop
 '''
 pbounds = {
     'batch_size_continuous': (4, 4000),
@@ -13,20 +13,20 @@ pbounds = {
 }
 '''
 pbounds = {
-    'batch_size_continuous': (680, 680),
+    'batch_size_continuous': (100, 680),
     # Possibly as small as possible to reduce model construction time.
     # Effect of large batch size is the same as large lr because
     # the training batch is repeative (no variance between batches).
     'lr_exp': (1.2, 1.2),
     # As large as possible to allows larger initial gradient
-    'momentum': (0.50, 0.9999),
-    'layer_size_continuous': (100, 100),
+    'momentum': (0.85, 0.85),
+    'layer_size_continuous': (3, 100),
     # As large as possible to increase model complexity, since no overfitting is presented.)
     'layer_count_continuous': (1, 1)
     # As small as possible because large layer count leads to slower optimization.
 }
 optimizer = BayesianOptimization(
-    f=perfect_acc_time,
+    f=memory_efficiency,
     pbounds=pbounds,
     random_state=1,
 )
