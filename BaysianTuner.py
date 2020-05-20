@@ -2,7 +2,7 @@ from bayes_opt import BayesianOptimization
 from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 from bayes_opt.util import load_logs
-from XORTrainerFunc import memory_efficiency  # perfect_acc_time  # model_contruction_time  # perfect_acc_time  # initial_acc  # initial_slop
+from XORTrainerFunc import perfect_acc_time  # memory_efficiency  # perfect_acc_time  # model_contruction_time  # perfect_acc_time  # initial_acc  # initial_slop
 '''
 pbounds = {
     'batch_size_continuous': (4, 4000),
@@ -16,28 +16,28 @@ pbounds = {
 
 def target_function(batch_size_continuous, lr_exp, momentum,
                     layer_size_continuous, layer_count_continuous):
-    target = memory_efficiency(batch_size_continuous, lr_exp, momentum,
-                               layer_size_continuous, layer_count_continuous)
+    target = perfect_acc_time(batch_size_continuous, lr_exp, momentum,
+                              layer_size_continuous, layer_count_continuous)
     print(
         "target:",
         target,
-        "batch_size_continuous:",
-        batch_size_continuous,
-        "layer_size_continuous",
-        layer_size_continuous
+        "lr_exp:",
+        lr_exp,
+        "momentum",
+        momentum
     )
     return target
 
 
 pbounds = {
-    'batch_size_continuous': (4, 120),
+    'batch_size_continuous': (20, 20),
     # Possibly as small as possible to reduce model construction time.
     # Effect of large batch size is the same as large lr because
     # the training batch is repeative (no variance between batches).
-    'lr_exp': (1.0, 1.5),
+    'lr_exp': (1.0, 2.0),
     # As large as possible to allows larger initial gradient
     'momentum': (0.85, 0.99),
-    'layer_size_continuous': (3, 75),
+    'layer_size_continuous': (20, 20),
     # As large as possible to increase model complexity, since no overfitting is presented.)
     'layer_count_continuous': (1, 1)
     # As small as possible because large layer count leads to slower optimization.
@@ -58,7 +58,7 @@ optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
 # run the optimization
 optimizer.maximize(
-    n_iter=1000,  # also determine by the boundary of each parameter
+    n_iter=100,  # also determine by the boundary of each parameter
     init_points=2**2,  # determine according to the boundary of each parameter
 )
 # access history and result

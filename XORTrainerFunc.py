@@ -107,9 +107,19 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
       steps_per_epoch=1,
       epochs=100,
       validation_data=xor_validation_data,
-      verbose=2,
+      verbose=0,
       callbacks=[stop_if_goal_reached, time_callback])
   computation_time = np.sum(time_callback.times)
+  epoch_usage = len(history.history['val_acc'])
+  final_acc = history.history['val_acc'][-1]
+  print(
+      "computation_time:",
+      computation_time,
+      "epoch size:",
+      epoch_usage,
+      "acc:",
+      final_acc
+  )
   del model
   gc.collect()
   tf.keras.backend.clear_session()
