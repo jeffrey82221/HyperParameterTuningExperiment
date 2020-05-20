@@ -13,10 +13,10 @@ pbounds = {
 }
 '''
 pbounds = {
-    'batch_size_continuous': (1500, 2000),
-    'lr_exp': (0.3, 0.6),
+    'batch_size_continuous': (2000, 2000),
+    'lr_exp': (0.6, 1.2),
     'momentum': (0.95, 0.95),
-    'layer_size_continuous': (5, 10),
+    'layer_size_continuous': (5, 100),
     'layer_count_continuous': (1, 1)
 }
 optimizer = BayesianOptimization(
@@ -35,8 +35,8 @@ optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
 # run the optimization
 optimizer.maximize(
-    n_iter=10000,  # also determine by the boundary of each parameter
-    init_points=2**3,  # determine according to the boundary of each parameter
+    n_iter=100,  # also determine by the boundary of each parameter
+    init_points=2**2,  # determine according to the boundary of each parameter
 )
 # access history and result
 
