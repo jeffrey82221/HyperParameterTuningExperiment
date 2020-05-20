@@ -15,6 +15,19 @@ class TimeHistory(tf.keras.callbacks.Callback):
     self.times.append(time.time() - self.epoch_time_start)
 
 
+'''
+get_model_memory_usage(4, model)
+
+single_layer_mem = 1
+for s in l.output_shape:
+  if s is None:
+    continue
+  single_layer_mem *= s
+
+[s for s in l.output_shape]
+'''
+
+
 def get_model_memory_usage(batch_size, model):
   shapes_mem_count = 0
   internal_model_mem_count = 0
@@ -23,10 +36,16 @@ def get_model_memory_usage(batch_size, model):
     if layer_type == 'Model':
       internal_model_mem_count += get_model_memory_usage(batch_size, l)
     single_layer_mem = 1
-    for s in l.output_shape:
-      if s is None:
-        continue
-      single_layer_mem *= s
+    if type(l.output_shape) == list:
+      for s in l.output_shape[0]:
+        if s is None:
+          continue
+        single_layer_mem *= s
+    else:
+      for s in l.output_shape:
+        if s is None:
+          continue
+        single_layer_mem *= s
     shapes_mem_count += single_layer_mem
 
   trainable_count = np.sum([K.count_params(p) for p in set(model.trainable_weights)])
