@@ -18,13 +18,6 @@ class TimeHistory(tf.keras.callbacks.Callback):
 '''
 get_model_memory_usage(4, model)
 
-single_layer_mem = 1
-for s in l.output_shape:
-  if s is None:
-    continue
-  single_layer_mem *= s
-
-[s for s in l.output_shape]
 '''
 
 
