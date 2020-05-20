@@ -5,4 +5,4 @@
 - allow printing of result in the target trainer functions
 - change the FileName XORTrainerFunc to XORTargetTrainerFunctions
 - allow contrain argument set for the funcs in XORTargetTrainerFunctions
-
+- allow the baysian_*_logs.json to be organized in a folder
