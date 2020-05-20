@@ -204,6 +204,6 @@ def memory_efficiency(batch_size_continuous, lr_exp, momentum,
   if final_acc < 1.0 or epoch_usage > 3:
     # The scenario we want to avoid:
     # val_acc < 1.0 or training epoch size > 3
-    return 0.
+    return 0. - epoch_usage + final_acc
   else:
     return memory_efficiency
