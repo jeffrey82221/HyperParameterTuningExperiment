@@ -105,7 +105,7 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   history = model.fit_generator(
       xor_data_generator,
       steps_per_epoch=1,
-      epochs=100,
+      epochs=10,
       validation_data=xor_validation_data,
       verbose=0,
       callbacks=[stop_if_goal_reached, time_callback])
@@ -123,8 +123,8 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   del model
   gc.collect()
   tf.keras.backend.clear_session()
-  if history.history['val_acc'][-1] < 1.0:
-    return 0.
+  if final_acc < 1.0:
+    return -1. + final_acc
   else:
     return 1. / computation_time
 
