@@ -13,14 +13,14 @@ pbounds = {
 }
 '''
 pbounds = {
-    'batch_size_continuous': (400, 700),
+    'batch_size_continuous': (680, 680),
     # Possibly as small as possible to reduce model construction time.
     # Effect of large batch size is the same as large lr because
     # the training batch is repeative (no variance between batches).
     'lr_exp': (1.2, 1.2),
     # As large as possible to allows larger initial gradient
-    'momentum': (0.99, 0.99),
-    'layer_size_continuous': (90, 200),
+    'momentum': (0.99, 0.9999),
+    'layer_size_continuous': (100, 100),
     # As large as possible to increase model complexity, since no overfitting is presented.)
     'layer_count_continuous': (1, 1)
     # As small as possible because large layer count leads to slower optimization.
