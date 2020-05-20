@@ -13,7 +13,7 @@ pbounds = {
 }
 '''
 pbounds = {
-    'batch_size_continuous': (1000, 1500),
+    'batch_size_continuous': (600, 1200),
     # Possibly as small as possible to reduce model construction time.
     # Effect of large batch size is the same as large lr because
     # the training batch is repeative (no variance between batches).
