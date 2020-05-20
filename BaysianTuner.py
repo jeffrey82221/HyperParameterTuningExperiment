@@ -12,6 +12,23 @@ pbounds = {
     'layer_count_continuous': (1.5, 2.5)
 }
 '''
+
+
+def target_function(batch_size_continuous, lr_exp, momentum,
+                    layer_size_continuous, layer_count_continuous):
+    target = memory_efficiency(batch_size_continuous, lr_exp, momentum,
+                               layer_size_continuous, layer_count_continuous)
+    print(
+        "target:",
+        target,
+        "batch_size_continuous:",
+        batch_size_continuous,
+        "layer_size_continuous",
+        layer_size_continuous
+    )
+    return target
+
+
 pbounds = {
     'batch_size_continuous': (100, 680),
     # Possibly as small as possible to reduce model construction time.
@@ -26,7 +43,7 @@ pbounds = {
     # As small as possible because large layer count leads to slower optimization.
 }
 optimizer = BayesianOptimization(
-    f=memory_efficiency,
+    f=target_function,
     pbounds=pbounds,
     random_state=1,
 )
