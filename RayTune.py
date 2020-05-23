@@ -75,7 +75,7 @@ analysis = tune.run(
     },
     resources_per_trial={
         "cpu": 1,
-        "gpu": 1
+        "gpu": 0.1
     },
 )
 print("Best trail is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
