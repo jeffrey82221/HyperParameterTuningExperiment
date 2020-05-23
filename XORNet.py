@@ -1,4 +1,6 @@
 import tensorflow as tf
+
+'''
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
   # Restrict TensorFlow to only use the first GPU
@@ -9,6 +11,7 @@ if gpus:
   except RuntimeError as e:
     # Visible devices must be set before GPUs have been initialized
     print(e)
+'''
 
 
 def xor_net(layer_size, layer_count, verbose=True):
