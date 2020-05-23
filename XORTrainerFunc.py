@@ -151,7 +151,7 @@ def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_c
       steps_per_epoch=1,  # this is a virtual parameter
       epochs=1,
       validation_data=xor_validation_data,
-      callbacks=[tune_report_call_back]
+      callbacks=[tune_report_call_back],
       verbose=2)
   del model
   gc.collect()
