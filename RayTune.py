@@ -47,7 +47,7 @@ from ray import tune
 from ray.tune import register_trainable
 
 register_trainable("target_function", target_function)
-ray.init(num_cpus=4, num_gpus=1)
+ray.init(num_cpus=48, num_gpus=4)
 '''
 sched = AsyncHyperBandScheduler(
     time_attr="training_iteration",
