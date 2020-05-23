@@ -62,15 +62,17 @@ analysis = tune.run(
     name="xor",
     stop={
         "mean_accuracy": 0.99,
-        "training_iteration": 5,
+        "training_iteration": 3,
     },
     num_samples=10,
     config={
-        "batch_size_continuous": tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
+        "batch_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
         "lr_exp": tune.sample_from(lambda spec: np.random.uniform(-3, 3)),
         "momentum": tune.sample_from(
             lambda spec: np.random.uniform(0.1, 0.9)),
         "layer_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512]),
         "layer_count_continuous": tune.grid_search([1, 2, 3]),
     })
-print("Best config is", analysis.get_best_config(metric="mean_accuracy"))
+print("Best config is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
+analysis.dataframe(metric='mean_accuracy', mode='max')
+analysis.dataframe(metric='training_iteration', mode='max')
