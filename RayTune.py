@@ -57,11 +57,11 @@ sched = AsyncHyperBandScheduler(
     grace_period=20)
 '''
 
-tune.run(
+analysis = tune.run(
     target_function,
     name="xor",
     stop={
-        "mean_accuracy": 0.99,
+        "mean_acc": 0.99,
         "training_iteration": 5,
     },
     num_samples=10,
@@ -73,3 +73,4 @@ tune.run(
         "layer_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512]),
         "layer_count_continuous": tune.grid_search([1, 2, 3]),
     })
+print("Best config is", analysis.get_best_config(metric="mean_acc"))
