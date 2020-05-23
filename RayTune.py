@@ -47,7 +47,7 @@ from ray import tune
 from ray.tune import register_trainable
 
 register_trainable("target_function", target_function)
-ray.init(num_cpus=48, num_gpus=4)
+ray.init(num_cpus=48, num_gpus=2)
 '''
 sched = AsyncHyperBandScheduler(
     time_attr="training_iteration",
@@ -66,12 +66,12 @@ analysis = tune.run(
     },
     num_samples=10,
     config={
-        "batch_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
+        "batch_size_continuous": tune.grid_search([4]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
         "lr_exp": tune.sample_from(lambda spec: np.random.uniform(-3, 3)),
         "momentum": tune.sample_from(
             lambda spec: np.random.uniform(0.1, 0.9)),
-        "layer_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512]),
-        "layer_count_continuous": tune.grid_search([1, 2, 3]),
+        "layer_size_continuous": tune.grid_search([4]),
+        "layer_count_continuous": tune.grid_search([1]),
     })
 print("Best config is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
 analysis.dataframe(metric='mean_accuracy', mode='max')

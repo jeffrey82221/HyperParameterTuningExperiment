@@ -8,8 +8,9 @@ from Util import TimeHistory, get_model_memory_usage
 import time
 import numpy as np
 '''
+from XORNet import xor_net
 from XORTrainerFunc import initial_slop
-val_acc, training_time = initial_slop(40, -1, 0.95, 10, 2)
+initial_slop(40, -1, 0.95, 10, 2)
 
 model = xor_net(100, 1, verbose=False)
 '''
