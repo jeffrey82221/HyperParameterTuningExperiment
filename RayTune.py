@@ -76,3 +76,5 @@ analysis = tune.run(
 print("Best config is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
 analysis.dataframe(metric='mean_accuracy', mode='max')
 analysis.dataframe(metric='training_iteration', mode='max')
+
+analysis.dataframe(metric='mean_loss', mode='min')
