@@ -67,13 +67,13 @@ analysis = tune.run(
     num_samples=100,
     config={
         "batch_size_continuous": tune.grid_search([4]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
-        "lr_exp": tune.sample_from(lambda spec: np.random.uniform(-3, 3)),
+        "lr_exp": tune.sample_from(lambda spec: np.random.uniform(1, 2)),
         "momentum": tune.sample_from(
-            lambda spec: np.random.uniform(0.1, 0.9)),
+            lambda spec: np.random.uniform(0.4, 0.5)),
         "layer_size_continuous": tune.grid_search([4]),
         "layer_count_continuous": tune.grid_search([1]),
     })
-print("Best config is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
-print(analysis.dataframe(metric='mean_accuracy', mode='max'))
-print(analysis.dataframe(metric='training_iteration', mode='max'))
-print(analysis.dataframe(metric='loss', mode='min'))
+print("Best trail is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
+print("Best config is", analysis.get_best_config(metric="mean_accuracy", mode='max', scope='all'))
+#print(analysis.dataframe(metric='mean_accuracy', mode='max'))
+#print(analysis.dataframe(metric='training_iteration', mode='max'))
