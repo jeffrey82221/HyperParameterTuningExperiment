@@ -65,6 +65,7 @@ analysis = tune.run(
         "training_iteration": 3,
     },
     num_samples=30,
+    max_failures=5,
     config={
         "batch_size_continuous": tune.grid_search([16384]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
         "lr_exp": tune.sample_from(lambda spec: np.random.uniform(1.1, 2)),
