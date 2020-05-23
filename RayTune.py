@@ -45,6 +45,9 @@ import numpy as np
 import ray
 from ray import tune
 from ray.tune.schedulers import AsyncHyperBandScheduler
+from ray.tune import register_trainable
+
+register_trainable("target_function", target_function)
 ray.init(num_cpus=4, num_gpus=1)
 sched = AsyncHyperBandScheduler(
     time_attr="training_iteration",
@@ -81,6 +84,6 @@ tune.run(
         "lr_exp": tune.sample_from(lambda spec: np.random.uniform(-3, 3)),
         "momentum": tune.sample_from(
             lambda spec: np.random.uniform(0.1, 0.9)),
-        "layer_size_continuous": [4, 16, 32, 64, 128, 256, 512],
-        "layer_count_continuous": [1, 2, 3],
+        "layer_size_continuous": tune.grid_search([4, 16, 32, 64, 128, 256, 512]),
+        "layer_count_continuous": tune.grid_search([1, 2, 3]),
     })
