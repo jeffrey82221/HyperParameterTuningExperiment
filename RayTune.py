@@ -66,14 +66,18 @@ analysis = tune.run(
     },
     num_samples=100,
     config={
-        "num_gpus": 0.1,
         "batch_size_continuous": tune.grid_search([4]),  # tune.sample_from(lambda spec: np.random.uniform(4, 4000)),
         "lr_exp": tune.sample_from(lambda spec: np.random.uniform(1, 2)),
         "momentum": tune.sample_from(
             lambda spec: np.random.uniform(0.4, 0.5)),
         "layer_size_continuous": tune.grid_search([4]),
         "layer_count_continuous": tune.grid_search([1]),
-    })
+    },
+    resources_per_trial={
+        "cpu": 1,
+        "gpu": 1
+    },
+)
 print("Best trail is", analysis.get_best_trial(metric="mean_accuracy", mode='max', scope='all'))
 print("Best config is", analysis.get_best_config(metric="mean_accuracy", mode='max', scope='all'))
 #print(analysis.dataframe(metric='mean_accuracy', mode='max'))
