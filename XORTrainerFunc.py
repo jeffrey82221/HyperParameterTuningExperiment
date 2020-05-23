@@ -38,7 +38,7 @@ def initial_slop(batch_size_continuous, lr_exp, momentum,
                                 steps_per_epoch=1,
                                 epochs=10,
                                 validation_data=xor_validation_data,
-                                verbose=2,
+                                verbose=0,
                                 callbacks=[time_callback, tune_report_call_back])
   computation_time = np.sum(time_callback.times)
   slop = (history.history['val_loss'][0] -
@@ -74,7 +74,7 @@ def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
       steps_per_epoch=1,  # this is a virtual parameter
       epochs=10,
       validation_data=xor_validation_data,
-      verbose=2,
+      verbose=0,
       callbacks=[one_second_stop_callback, tune_report_call_back])
   final_acc = history.history['val_acc'][-1]
   del model
@@ -152,7 +152,7 @@ def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_c
       epochs=1,
       validation_data=xor_validation_data,
       callbacks=[tune_report_call_back],
-      verbose=2)
+      verbose=0)
   del model
   gc.collect()
   tf.keras.backend.clear_session()
