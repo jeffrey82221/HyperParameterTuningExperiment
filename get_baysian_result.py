@@ -22,11 +22,17 @@ for v in list(map(lambda x:x['params']['layer_count_continuous'],data)):
 
 def get():
     pbounds = {
-        'batch_size_continuous': (1500, 2000),
+        'batch_size_continuous': (20, 20),
+        # Possibly as small as possible to reduce model construction time.
+        # Effect of large batch size is the same as large lr because
+        # the training batch is repeative (no variance between batches).
         'lr_exp': (1.02, 1.02),
-        'momentum': (0.80, 0.80),
-        'layer_size_continuous': (5, 10),
+        # As large as possible to allows larger initial gradient
+        'momentum': (0.8, 0.8),
+        'layer_size_continuous': (20, 20),
+        # As large as possible to increase model complexity, since no overfitting is presented.)
         'layer_count_continuous': (1, 1)
+        # As small as possible because large layer count leads to slower optimization.
     }
     optimizer = BayesianOptimization(
         f=initial_acc,  # initial_slop,

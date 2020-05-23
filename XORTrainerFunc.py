@@ -16,7 +16,7 @@ model = xor_net(100, 1, verbose=False)
 
 
 def initial_slop(batch_size_continuous, lr_exp, momentum,
-                 layer_size_continuous, layer_count_continuous):
+                 layer_size_continuous, layer_count_continuous, tune_report_call_back=None):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp  # float(sys.argv[3])
@@ -39,7 +39,7 @@ def initial_slop(batch_size_continuous, lr_exp, momentum,
                                 epochs=10,
                                 validation_data=xor_validation_data,
                                 verbose=2,
-                                callbacks=[time_callback])
+                                callbacks=[time_callback, tune_report_call_back])
   computation_time = np.sum(time_callback.times)
   slop = (history.history['val_loss'][0] -
           history.history['val_loss'][-1]) / computation_time
@@ -51,7 +51,7 @@ def initial_slop(batch_size_continuous, lr_exp, momentum,
 
 
 def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
-                layer_count_continuous):
+                layer_count_continuous, tune_report_call_back=None):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp
@@ -75,7 +75,7 @@ def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
       epochs=10,
       validation_data=xor_validation_data,
       verbose=2,
-      callbacks=[one_second_stop_callback])
+      callbacks=[one_second_stop_callback, tune_report_call_back])
   final_acc = history.history['val_acc'][-1]
   del model
   gc.collect()
@@ -84,7 +84,7 @@ def initial_acc(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
 
 
 def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
-                     layer_size_continuous, layer_count_continuous):
+                     layer_size_continuous, layer_count_continuous, tune_report_call_back):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp  # float(sys.argv[3])
@@ -108,7 +108,7 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
       epochs=10,
       validation_data=xor_validation_data,
       verbose=0,
-      callbacks=[stop_if_goal_reached, time_callback])
+      callbacks=[stop_if_goal_reached, time_callback, tune_report_call_back])
   computation_time = np.sum(time_callback.times)
   epoch_usage = len(history.history['val_acc'])
   final_acc = history.history['val_acc'][-1]
@@ -130,7 +130,7 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
 
 
 def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_continuous,
-                           layer_count_continuous):
+                           layer_count_continuous, tune_report_call_back=None):
   construct_start_time = time.time()
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp
@@ -151,6 +151,7 @@ def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_c
       steps_per_epoch=1,  # this is a virtual parameter
       epochs=1,
       validation_data=xor_validation_data,
+      callbacks=[tune_report_call_back]
       verbose=2)
   del model
   gc.collect()
@@ -160,7 +161,7 @@ def model_contruction_time(batch_size_continuous, lr_exp, momentum, layer_size_c
 
 
 def memory_efficiency(batch_size_continuous, lr_exp, momentum,
-                      layer_size_continuous, layer_count_continuous):
+                      layer_size_continuous, layer_count_continuous, tune_report_call_back=None):
   # parameter initialize
   batch_size = int(batch_size_continuous / 4) * 4
   lr = 10**lr_exp  # float(sys.argv[3])
@@ -184,7 +185,7 @@ def memory_efficiency(batch_size_continuous, lr_exp, momentum,
       epochs=5,
       validation_data=xor_validation_data,
       verbose=0,
-      callbacks=[stop_if_goal_reached, time_callback])
+      callbacks=[stop_if_goal_reached, time_callback, tune_report_call_back])
   memory_usage = get_model_memory_usage(batch_size, model)
   epoch_usage = len(history.history['val_acc'])
   final_acc = history.history['val_acc'][-1]
@@ -202,8 +203,6 @@ def memory_efficiency(batch_size_continuous, lr_exp, momentum,
   gc.collect()
   tf.keras.backend.clear_session()
   if final_acc < 1.0 or epoch_usage > 3:
-    # The scenario we want to avoid:
-    # val_acc < 1.0 or training epoch size > 3
     return 0. - epoch_usage + final_acc
   else:
     return memory_efficiency
