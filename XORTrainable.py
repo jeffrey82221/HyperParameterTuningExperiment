@@ -19,12 +19,14 @@ initial_slop(40, -1, 0.95, 10, 2)
 model = xor_net(100, 1, verbose=False)
 '''
 
+
 class XORTrainable(Trainable):
   def _build_model(self):
     model = xor_net(
-      self.layer_size, 
-      self.layer_count, verbose=False)
-    return model 
+        self.layer_size,
+        self.layer_count, verbose=False)
+    return model
+
   def _setup(self, config):
     self.batch_size = int(config["batch_size_continuous"] / 4) * 4
     self.lr = 10**config["lr_exp"]  # float(sys.argv[3])
@@ -33,15 +35,17 @@ class XORTrainable(Trainable):
     self.layer_count = int(config["layer_count_continuous"])
     self.epochs = int(config['epochs'])
     model = self._build_model()
-    op = tf.keras.optimizers.SGD(lr=self.lr, 
-      momentum=self.momentum, nesterov=True)
+    self.op = tf.keras.optimizers.SGD(lr=self.lr,
+                                      momentum=self.momentum, nesterov=True)
     loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-    model.compile(loss=loss, optimizer=op, metrics=['acc'])
-    self.model = model 
+    model.compile(loss=loss, optimizer=self.op, metrics=['acc'])
+    self.model = model
+
   def _callbacks(self):
     #tune_reporter_callback = TuneReporterCallback()
     self.callbacks = {}
-    return self.callbacks  
+    return self.callbacks
+
   def _train(self):
     xor_data_generator = get_xor_generator(self.batch_size)
     validation_size = 4
@@ -53,26 +57,35 @@ class XORTrainable(Trainable):
                                   verbose=0,
                                   callbacks=self._callbacks().values())
     return self._get_result()
+
   def _get_result(self):
     return {
-      "mean_accuracy" : self.history.history['val_acc'][-1],
-      "mean_loss": self.history.history['val_loss'][-1] 
+        "mean_accuracy": self.history.history['val_acc'][-1],
+        "mean_loss": self.history.history['val_loss'][-1]
     }
-      
-    
+
   def _save(self, checkpoint_dir):
     file_path = checkpoint_dir + '/model'
     self.model.save_weights(file_path)
     return file_path
+
   def _restore(self, path):
-    self.model.load_weights(path) 
+    self.model.load_weights(path)
+
   def _stop(self):
     # If need, save your model when exit.
-    # saved_path = self.model.save(self.logdir)
-    # print('save model at: ', saved_path)
-    pass
+    saved_path = self.model.save(self.logdir)
+    print('save model at: ', saved_path)
 
-    
+  def reset_config(self, new_config):
+    if "lr_exp" in new_config:
+      self.op.lr.set_value(10**new_config['lr_exp'])
+    if "momentum" in new_config:
+      self.op.momentum.set_value(new_config['momentum'])
+    self.config = new_config
+    return True
+
+
 '''
 def initial_slop(batch_size_continuous,
                  lr_exp,
@@ -116,25 +129,27 @@ def initial_slop(batch_size_continuous,
 
   return slop
 '''
+
+
 class InitialSlopTrainable(XORTrainable):
   def _callbacks(self):
     time_callback = TimeHistory()
     #tune_reporter_callback = TuneReporterCallback()
     self.callbacks = {
-      "time_callback":time_callback,
-      #"tune_reporter_callback":tune_reporter_callback
+        "time_callback": time_callback,
+        #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
+
   def _get_result(self):
     #computation_time = np.sum(self.callbacks["time_callback"].times)
     slop = (self.history.history['val_loss'][0] -
             self.history.history['val_loss'][-1]) / float(len(self.history.history['val_loss']))
     return {
-      "slop": slop, 
-      "mean_accuracy" : self.history.history['val_acc'][-1],
-      "mean_loss": self.history.history['val_loss'][-1] 
+        "slop": slop,
+        "mean_accuracy": self.history.history['val_acc'][-1],
+        "mean_loss": self.history.history['val_loss'][-1]
     }
-
 
 
 '''
@@ -178,13 +193,15 @@ def initial_acc(batch_size_continuous,
   tf.keras.backend.clear_session()
   return final_acc
 '''
+
+
 class InitialAccuracyTrainable(XORTrainable):
   def _callbacks(self):
     #tune_reporter_callback = TuneReporterCallback()
     #one_second_stop_callback = OneSecondStopper()
     self.callbacks = {}
     #  "one_second_stop_callback":one_second_stop_callback,
-      #"tune_reporter_callback":tune_reporter_callback
+    #"tune_reporter_callback":tune_reporter_callback
     #}
     return self.callbacks
 
@@ -234,17 +251,20 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
   else:
     return 1. / computation_time
 '''
+
+
 class IdealAccuracySpeedTrainable(XORTrainable):
   def _callbacks(self):
     time_callback = TimeHistory()
     #tune_reporter_callback = TuneReporterCallback()
     stop_if_goal_reached = GoalReachedStopper()
     self.callbacks = {
-      "stop_if_goal_reached":stop_if_goal_reached,
-      "time_callback":time_callback,
-      #"tune_reporter_callback":tune_reporter_callback
+        "stop_if_goal_reached": stop_if_goal_reached,
+        "time_callback": time_callback,
+        #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
+
   def _get_result(self):
     computation_time = np.sum(self.callbacks["time_callback"].times)
     final_acc = self.history.history['val_acc'][-1]
@@ -253,10 +273,11 @@ class IdealAccuracySpeedTrainable(XORTrainable):
     else:
       acc_feasibility_guided_speed = 1. / computation_time
     return {
-      "acc_feasibility_guided_speed":acc_feasibility_guided_speed,
-      "mean_accuracy" : self.history.history['val_acc'][-1],
-      "mean_loss": self.history.history['val_loss'][-1] 
+        "acc_feasibility_guided_speed": acc_feasibility_guided_speed,
+        "mean_accuracy": self.history.history['val_acc'][-1],
+        "mean_loss": self.history.history['val_loss'][-1]
     }
+
 
 '''
 def memory_efficiency(batch_size_continuous,
@@ -316,22 +337,23 @@ class MemoryEfficiencyTrainable(XORTrainable):
     #tune_reporter_callback = TuneReporterCallback()
     stop_if_goal_reached = GoalReachedStopper()
     self.callbacks = {
-      "stop_if_goal_reached":stop_if_goal_reached,
-      "time_callback":time_callback,
-      #"tune_reporter_callback":tune_reporter_callback
+        "stop_if_goal_reached": stop_if_goal_reached,
+        "time_callback": time_callback,
+        #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
+
   def _get_result(self):
     memory_usage = get_model_memory_usage(self.batch_size, self.model)
     epoch_usage = len(self.history.history['val_acc'])
     final_acc = self.history.history['val_acc'][-1]
     memory_efficiency = 1. / memory_usage
     if final_acc < 1.0 or epoch_usage > 3:
-      speed_feasibility_guided_memory_efficiency =  0. - epoch_usage + final_acc
+      speed_feasibility_guided_memory_efficiency = 0. - epoch_usage + final_acc
     else:
       speed_feasibility_guided_memory_efficiency = memory_efficiency
     return {
-      "speed_feasibility_guided_memory_efficiency":speed_feasibility_guided_memory_efficiency,
-      "mean_accuracy" : self.history.history['val_acc'][-1],
-      "mean_loss": self.history.history['val_loss'][-1] 
+        "speed_feasibility_guided_memory_efficiency": speed_feasibility_guided_memory_efficiency,
+        "mean_accuracy": self.history.history['val_acc'][-1],
+        "mean_loss": self.history.history['val_loss'][-1]
     }
