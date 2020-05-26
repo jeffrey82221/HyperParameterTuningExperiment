@@ -22,7 +22,8 @@ analysis = run(
     scheduler=pbt,
     reuse_actors=True,
     checkpoint_freq=2,
-    keep_checkpoints_num=100,
+    # keep_checkpoints_num=100,
+    #checkpoint_score_attr = "min-mean_loss"
     verbose=True,
     stop={
         "training_iteration": 5,
@@ -31,6 +32,7 @@ analysis = run(
         "cpu": 1,
         "gpu": 0
     },
+    sync_on_checkpoint=False,
     num_samples=100,
     config={
         'epochs': 5,
@@ -40,5 +42,6 @@ analysis = run(
         'layer_size_continuous': grid_search([2, 4, 8, 16, 32, 64, 128, 256]),
         'layer_count_continuous': grid_search([1, 2, 3])
     },
-    local_dir="./ray_results_xor"
+    local_dir="./ray_results_xor",
+    restore="./ray_results_xor"
 )
