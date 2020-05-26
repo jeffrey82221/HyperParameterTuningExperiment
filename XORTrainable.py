@@ -25,13 +25,13 @@ class XORTrainable(Trainable):
       self.layer_size, 
       self.layer_count, verbose=False)
     return model 
-  def _setup(self):
-    self.batch_size = int(self.config["batch_size_continuous"] / 4) * 4
-    self.lr = 10**self.config["lr_exp"]  # float(sys.argv[3])
-    self.momentum = self.config["momentum"]
-    self.layer_size = int(self.config["layer_size_continuous"])
-    self.layer_count = int(self.config["layer_count_continuous"])
-    self.epochs = int(self.config['epochs'])
+  def _setup(self, config):
+    self.batch_size = int(config["batch_size_continuous"] / 4) * 4
+    self.lr = 10**config["lr_exp"]  # float(sys.argv[3])
+    self.momentum = config["momentum"]
+    self.layer_size = int(config["layer_size_continuous"])
+    self.layer_count = int(config["layer_count_continuous"])
+    self.epochs = int(config['epochs'])
     model = self._build_model()
     op = tf.keras.optimizers.SGD(lr=self.lr, 
       momentum=self.momentum, nesterov=True)
