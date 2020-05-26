@@ -22,7 +22,7 @@ analysis = run(
     scheduler=pbt,
     reuse_actors=True,
     checkpoint_freq=2,
-    keep_checkpoints_num=4,
+    keep_checkpoints_num=100,
     verbose=True,
     stop={
         "training_iteration": 5,
