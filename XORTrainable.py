@@ -8,7 +8,7 @@ from Util import TimeHistory, get_model_memory_usage
 import time
 import numpy as np
 from ray.tune import Trainable
-from ray.tune.integration.keras import TuneReporterCallback
+#from ray.tune.integration.keras import TuneReporterCallback
 
 
 '''
@@ -39,16 +39,14 @@ class XORTrainable(Trainable):
     model.compile(loss=loss, optimizer=op, metrics=['acc'])
     self.model = model 
   def _callbacks(self):
-    tune_reporter_callback = TuneReporterCallback()
-    self.callbacks = {
-      "tune_reporter_callback": tune_reporter_callback
-    }
+    #tune_reporter_callback = TuneReporterCallback()
+    self.callbacks = {}
     return self.callbacks  
   def _train(self):
     xor_data_generator = get_xor_generator(self.batch_size)
     validation_size = 4
     xor_validation_data = get_xor_data(validation_size)
-    self.history = self.model.fit_generator(xor_data_generator,
+    self.history = self.model.fit(xor_data_generator,
                                   steps_per_epoch=1,
                                   epochs=self.epochs,
                                   validation_data=xor_validation_data,
@@ -121,10 +119,10 @@ def initial_slop(batch_size_continuous,
 class InitialSlopTrainable(XORTrainable):
   def _callbacks(self):
     time_callback = TimeHistory()
-    tune_reporter_callback = TuneReporterCallback()
+    #tune_reporter_callback = TuneReporterCallback()
     self.callbacks = {
       "time_callback":time_callback,
-      "tune_reporter_callback":tune_reporter_callback
+      #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
   def _get_result(self):
@@ -182,11 +180,11 @@ def initial_acc(batch_size_continuous,
 '''
 class InitialAccuracyTrainable(XORTrainable):
   def _callbacks(self):
-    tune_reporter_callback = TuneReporterCallback()
+    #tune_reporter_callback = TuneReporterCallback()
     one_second_stop_callback = OneSecondStopper()
     self.callbacks = {
       "one_second_stop_callback":one_second_stop_callback,
-      "tune_reporter_callback":tune_reporter_callback
+      #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
 
@@ -239,12 +237,12 @@ def perfect_acc_time(batch_size_continuous, lr_exp, momentum,
 class IdealAccuracySpeedTrainable(XORTrainable):
   def _callbacks(self):
     time_callback = TimeHistory()
-    tune_reporter_callback = TuneReporterCallback()
+    #tune_reporter_callback = TuneReporterCallback()
     stop_if_goal_reached = GoalReachedStopper()
     self.callbacks = {
       "stop_if_goal_reached":stop_if_goal_reached,
       "time_callback":time_callback,
-      "tune_reporter_callback":tune_reporter_callback
+      #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
   def _get_result(self):
@@ -315,12 +313,12 @@ def memory_efficiency(batch_size_continuous,
 class MemoryEfficiencyTrainable(XORTrainable):
   def _callbacks(self):
     time_callback = TimeHistory()
-    tune_reporter_callback = TuneReporterCallback()
+    #tune_reporter_callback = TuneReporterCallback()
     stop_if_goal_reached = GoalReachedStopper()
     self.callbacks = {
       "stop_if_goal_reached":stop_if_goal_reached,
       "time_callback":time_callback,
-      "tune_reporter_callback":tune_reporter_callback
+      #"tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
   def _get_result(self):
