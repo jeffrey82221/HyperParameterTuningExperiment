@@ -48,7 +48,7 @@ class XORTrainable(Trainable):
     xor_data_generator = get_xor_generator(self.batch_size)
     validation_size = 4
     xor_validation_data = get_xor_data(validation_size)
-    self.history = model.fit_generator(xor_data_generator,
+    self.history = self.model.fit_generator(xor_data_generator,
                                   steps_per_epoch=1,
                                   epochs=self.epochs,
                                   validation_data=xor_validation_data,
