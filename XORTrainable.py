@@ -8,7 +8,6 @@ from Util import TimeHistory, get_model_memory_usage
 import time
 import numpy as np
 from ray.tune import Trainable
-from ray.tune import TrainingResult
 from ray.tune.integration.keras import TuneReporterCallback
 
 
@@ -57,10 +56,11 @@ class XORTrainable(Trainable):
                                   callbacks=self._callbacks().values())
     return self._get_result()
   def _get_result(self):
-    return TrainingResult(
-      mean_accuracy = self.history.history['val_acc'][-1],
-      mean_loss = self.history.history['val_loss'][-1] 
-      )
+    return {
+      "mean_accuracy" : self.history.history['val_acc'][-1],
+      "mean_loss": self.history.history['val_loss'][-1] 
+    }
+      
     
   def _save(self, checkpoint_dir):
     file_path = checkpoint_dir + '/model'
@@ -131,7 +131,11 @@ class InitialSlopTrainable(XORTrainable):
     computation_time = np.sum(self.callbacks["time_callback"].times)
     slop = (self.history.history['val_loss'][0] -
             self.history.history['val_loss'][-1]) / computation_time 
-    return TrainResult(slop = slop)
+    return {
+      "slop": slop, 
+      "mean_accuracy" : self.history.history['val_acc'][-1],
+      "mean_loss": self.history.history['val_loss'][-1] 
+    }
 
 
 
@@ -185,9 +189,6 @@ class InitialAccuracyTrainable(XORTrainable):
       "tune_reporter_callback":tune_reporter_callback
     }
     return self.callbacks
-  def _get_result(self):
-    final_acc = self.history.history['val_acc'][-1]
-    return TrainResult(mean_accuracy = final_acc)
 
 
 '''
@@ -253,7 +254,11 @@ class IdealAccuracySpeedTrainable(XORTrainable):
       acc_feasibility_guided_speed = -1. + final_acc
     else:
       acc_feasibility_guided_speed = 1. / computation_time
-    return TrainResult(acc_feasibility_guided_speed = acc_feasibility_guided_speed)
+    return {
+      "acc_feasibility_guided_speed":acc_feasibility_guided_speed,
+      "mean_accuracy" : self.history.history['val_acc'][-1],
+      "mean_loss": self.history.history['val_loss'][-1] 
+    }
 
 '''
 def memory_efficiency(batch_size_continuous,
@@ -327,4 +332,8 @@ class MemoryEfficiencyTrainable(XORTrainable):
       speed_feasibility_guided_memory_efficiency =  0. - epoch_usage + final_acc
     else:
       speed_feasibility_guided_memory_efficiency = memory_efficiency
-    return TrainResult(speed_feasibility_guided_memory_efficiency = speed_feasibility_guided_memory_efficiency)
+    return {
+      "speed_feasibility_guided_memory_efficiency":speed_feasibility_guided_memory_efficiency,
+      "mean_accuracy" : self.history.history['val_acc'][-1],
+      "mean_loss": self.history.history['val_loss'][-1] 
+    }
