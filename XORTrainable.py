@@ -126,9 +126,9 @@ class InitialSlopTrainable(XORTrainable):
     }
     return self.callbacks
   def _get_result(self):
-    computation_time = np.sum(self.callbacks["time_callback"].times)
+    #computation_time = np.sum(self.callbacks["time_callback"].times)
     slop = (self.history.history['val_loss'][0] -
-            self.history.history['val_loss'][-1]) / computation_time 
+            self.history.history['val_loss'][-1]) / float(len(self.history.history['val_loss']))
     return {
       "slop": slop, 
       "mean_accuracy" : self.history.history['val_acc'][-1],
@@ -181,11 +181,11 @@ def initial_acc(batch_size_continuous,
 class InitialAccuracyTrainable(XORTrainable):
   def _callbacks(self):
     #tune_reporter_callback = TuneReporterCallback()
-    one_second_stop_callback = OneSecondStopper()
-    self.callbacks = {
-      "one_second_stop_callback":one_second_stop_callback,
+    #one_second_stop_callback = OneSecondStopper()
+    self.callbacks = {}
+    #  "one_second_stop_callback":one_second_stop_callback,
       #"tune_reporter_callback":tune_reporter_callback
-    }
+    #}
     return self.callbacks
 
 
