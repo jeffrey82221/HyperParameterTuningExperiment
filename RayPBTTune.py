@@ -1,6 +1,6 @@
 from XORTrainable import InitialAccuracyTrainable
 import ray
-from ray.tune import grid_search
+from ray.tune import grid_search, sample_from
 from ray.tune.schedulers import PopulationBasedTraining
 from ray.tune import register_trainable
 from ray.tune import run
@@ -13,8 +13,8 @@ pbt = PopulationBasedTraining(
     mode='min',
     perturbation_interval=10,
     hyperparam_mutations={
-        'lr_exp': lambda _: np.random.uniform(-3., 3.),
-        'momentum': lambda _: np.random.uniform(0., 1.)
+        'lr_exp': lambda _: np.random.uniform(-1., 1.),
+        'momentum': lambda _: np.random.uniform(-0.1, 0.1)
     })
 analysis = run(
     InitialAccuracyTrainable,
@@ -26,19 +26,19 @@ analysis = run(
     #checkpoint_score_attr = "min-mean_loss"
     verbose=True,
     stop={
-        "training_iteration": 5,
+        "training_iteration": 8,
     },
     resources_per_trial={
         "cpu": 1,
         "gpu": 0
     },
     sync_on_checkpoint=False,
-    num_samples=100,
+    num_samples=10,
     config={
-        'epochs': 5,
+        'epochs': 8,
         'batch_size_continuous': 4,
-        'lr_exp': 0,
-        'momentum': 0.5,
+        'lr_exp': grid_search([-3, -2, -1, 0, 1, 2, 3]),
+        'momentum': sample_from(lambda spec: np.random.uniform(0.1, 0.9)),
         'layer_size_continuous': grid_search([2, 4, 8, 16, 32, 64, 128, 256]),
         'layer_count_continuous': grid_search([1, 2, 3])
     },
