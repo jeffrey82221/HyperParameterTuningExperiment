@@ -42,6 +42,6 @@ analysis = run(
         'layer_size_continuous': grid_search([2, 4, 8, 16, 32, 64, 128, 256]),
         'layer_count_continuous': grid_search([1, 2, 3])
     },
-    local_dir="./ray_results_xor",
-    restore="./ray_results_xor"
+    local_dir="." #
+    # restore="./ray_results_xor"
 )
