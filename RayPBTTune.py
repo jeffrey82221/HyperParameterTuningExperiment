@@ -42,6 +42,9 @@ analysis = run(
         'layer_size_continuous': grid_search([2, 4, 8, 16, 32, 64, 128, 256]),
         'layer_count_continuous': grid_search([1, 2, 3])
     },
-    local_dir="." #
+    local_dir=".",
+    queue_trials=True
     # restore="./ray_results_xor"
 )
+print("Best Loss Config", analysis.get_best_config(metric="mean_loss", mode='min', scope='all'))
+print("Best Accuracy Config", analysis.get_best_config(metric="mean_accuracy", mode='max', scope='all'))
