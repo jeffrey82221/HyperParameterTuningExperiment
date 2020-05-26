@@ -9,6 +9,7 @@ import time
 import numpy as np
 from ray.tune import Trainable
 #from ray.tune.integration.keras import TuneReporterCallback
+from tensorflow.keras.models import load_model
 
 
 '''
@@ -66,22 +67,23 @@ class XORTrainable(Trainable):
 
   def _save(self, checkpoint_dir):
     file_path = checkpoint_dir + '/model'
-    self.model.save_weights(file_path)
+    self.model.save(file_path)
     return file_path
 
   def _restore(self, path):
-    self.model.load_weights(path)
+    del self.model
+    self.model = load_model(path)
 
   def _stop(self):
     # If need, save your model when exit.
-    saved_path = self.model.save(self.logdir)
-    print('save model at: ', saved_path)
-
+#saved_path = self.model.save(self.logdir)
+#print('save model at: ', saved_path)
+    pass 
   def reset_config(self, new_config):
     if "lr_exp" in new_config:
-      self.op.lr.set_value(10**new_config['lr_exp'])
+      tf.keras.backend.set_value(self.op.lr,10**new_config['lr_exp'])
     if "momentum" in new_config:
-      self.op.momentum.set_value(new_config['momentum'])
+      tf.keras.backend.set_value(self.op.momentum,new_config['momentum'])
     self.config = new_config
     return True
 

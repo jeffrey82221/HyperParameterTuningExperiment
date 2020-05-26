@@ -7,11 +7,11 @@ from ray.tune import run
 import numpy as np
 register_trainable('InitialAccuracyTrainable', InitialAccuracyTrainable)
 
-ray.init(num_cpus=40)
+ray.init(num_cpus=40, num_gpus=0)
 pbt = PopulationBasedTraining(
     time_attr="training_iteration", metric='mean_loss',
     mode='min',
-    perturbation_interval=10,
+    perturbation_interval=2,
     hyperparam_mutations={
         'lr_exp': lambda _: np.random.uniform(-1., 1.),
         'momentum': lambda _: np.random.uniform(-0.1, 0.1)
@@ -33,7 +33,7 @@ analysis = run(
         "gpu": 0
     },
     sync_on_checkpoint=False,
-    num_samples=10,
+    num_samples=30,
     config={
         'epochs': 8,
         'batch_size_continuous': 4,
